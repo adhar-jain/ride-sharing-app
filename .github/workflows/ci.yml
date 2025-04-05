@@ -30,7 +30,7 @@ jobs:
 
       - name: Build Angular app
         run: |
-          npm run build -- --output-path=dist --base-href=/<your-repo-name>/
+          npm run build -- --output-path=dist --base-href=/ride-sharing-app/
 
       - name: Upload build output
         uses: actions/upload-pages-artifact@v1

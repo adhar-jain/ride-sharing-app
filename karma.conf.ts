@@ -1,4 +1,9 @@
-module.exports = function (config) {
+module.exports = function (config: {
+        set: (arg0: {
+            browsers: string[]; browserDisconnectTimeout: number; // Wait 2 seconds before disconnect
+            browserNoActivityTimeout: number;
+        }) => void;
+    }) {
     config.set({
       browsers: ['ChromeHeadless'],
       browserDisconnectTimeout: 2000, // Wait 2 seconds before disconnect

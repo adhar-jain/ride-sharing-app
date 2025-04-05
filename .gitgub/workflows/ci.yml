@@ -1,0 +1,99 @@
+name: CI/CD Pipeline for Ride Sharing App
+on:
+  push: 
+    branches:
+      - main # Trigger on push to main branch
+  pull_request: 
+    branches:
+      - main # Trigger on pull request to main branch
+  workflow_dispatch: # Allow manual trigger of the workflow   
+
+jobs: 
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
+      # Install Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.x' # Specify the Node.js version you want to use
+      - name: Install dependencies
+        run: |
+          npm install
+          echo "NODE_ENV=development" > .env
+      - name: Build artifact
+        run: |
+          npm run build
+      
+      # - name: Security scans (Veracode, Black Duck)
+      #   run: |
+      #     # Add your security scan commands here
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      #checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
+      #install dependencies
+      - name: Install dependencies
+        run: |
+          npm install
+       #run unit tests
+      - name: Run unit tests
+        run: |
+          npm test
+      #lint / format checks
+      - name: Lint / format checks
+        run: |
+          npm run lint
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Only allow read access to the repository contents
+      pages: write # Allow GitHub Pages to be published
+      id-token: write # Allow the use of OIDC tokens for authentication
+    steps:
+      #Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with: 
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Download/prepare build artifact
+        run: |
+            - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.x' # Specify the Node.js version you want to use
+      - name: configure github pages
+        uses: actions/configure-pages@v2
+        with:
+          static_site_generator: next
+      - run: npm install
+      - run: npm run build
+      - name: upload artifacts
+        uses: actions/upload-pages-artifact@v1
+        with: 
+          path: '/out'
+      - name: Deploy to GitHub pages
+        uses: actions/deploy-pages@v1
+        with:
+          publish_dir: out
+
+
+
+#Install dependencies
+
+#Run unit tests
+
+#Lint / format checks
+
+#Build artifact
+
+#Security scans (Veracode, Black Duck)
+
+#Upload artifacts (optional, for later CD step)

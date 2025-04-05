@@ -1,0 +1,8 @@
+#CD Workflow (Trigger on tag or merge to main/release):
+#Checkout code
+
+#Download/prepare build artifact
+
+#Deploy to PCF
+
+#Smoke tests or basic health checks

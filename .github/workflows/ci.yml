@@ -26,7 +26,12 @@ jobs:
           echo "NODE_ENV=development" > .env
       - name: Build artifact
         run: |
-          npm run build
+          npm run build -- --output-path=dist --base-ref=/ride-sharing-app/
+          echo "Build artifact created in dist directory"
+      - name: upload build output
+        uses: actions/upload-pages-artifact@v1
+        with:
+            path: ./dist 
       
       # - name: Security scans (Veracode, Black Duck)
       #   run: |
@@ -61,25 +66,29 @@ jobs:
       contents: write # Only allow read access to the repository contents
       pages: write # Allow GitHub Pages to be published
       id-token: write # Allow the use of OIDC tokens for authentication
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       #Checkout code
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with: 
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Download/prepare build artifact
-        run: |
-          echo "Preparing build artifact..."
-      - name: configure github pages
-        uses: actions/configure-pages@v2
-        with:
-          static_site_generator: next
-      - run: npm install
-      - run: npm run build
-      - name: upload artifacts
-        uses: actions/upload-pages-artifact@v1
-        with: 
-          path: '/out'
+      # - name: Checkout code
+      #   uses: actions/checkout@v2
+      #   with: 
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Download/prepare build artifact
+      #   run: |
+      #     echo "Preparing build artifact..."
+      # - name: configure github pages
+      #   uses: actions/configure-pages@v2
+      #   with:
+      #     static_site_generator: next
+      # - run: npm install
+      # - run: npm run build
+      # - name: upload artifacts
+      #   uses: actions/upload-artifact@v3
+      #   with: 
+      #     name: github-pages
+      #     path: '/out'
       - name: Deploy to GitHub pages
         uses: actions/deploy-pages@v1
         with:

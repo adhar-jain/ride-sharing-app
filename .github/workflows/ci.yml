@@ -34,7 +34,7 @@ jobs:
         run: npm run build -- --output-path=dist --base-href=/ride-sharing-app/
 
       - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v2  # <-- This line should use v2 instead of v3
         with:
           path: ./dist
 

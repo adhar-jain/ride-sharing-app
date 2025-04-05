@@ -1,100 +1,32 @@
-name: CI/CD Pipeline for Ride Sharing App
+name: Deploy Angular to GitHub Pages
+
 on:
-  push: 
+  push:
     branches:
-      - main # Trigger on push to main branch
-  pull_request: 
-    branches:
-      - main # Trigger on pull request to main branch
-  workflow_dispatch: # Allow manual trigger of the workflow   
+      - main  # or your default branch
 
-jobs: 
-  build:
+jobs:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      # Checkout code
-      - name: Checkout code
-        uses: actions/checkout@v2
-      # Install Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20.x' # Specify the Node.js version you want to use
-      - name: Install dependencies
-        run: |
-          npm install
-          echo "NODE_ENV=development" > .env
-      - name: Build artifact
-        run: |
-          npm run build
-      
-      # - name: Security scans (Veracode, Black Duck)
-      #   run: |
-      #     # Add your security scan commands here
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      #checkout code
-      - name: Checkout code
-        uses: actions/checkout@v2
-      #install dependencies
-      - name: Install dependencies
-        run: |
-          npm install
-       #run unit tests
-      - name: Run unit tests
-        run: |
-          npm test -- --browsers=ChromeHeadless
-      #lint / format checks
-      # - name: Lint / format checks
-      #   run: |
-      #     npm run lint
-      - name: Cleanup processes
-        run: pkill -f chrome || true
-      
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write # Only allow read access to the repository contents
-      pages: write # Allow GitHub Pages to be published
-      id-token: write # Allow the use of OIDC tokens for authentication
-    steps:
-      #Checkout code
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with: 
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Download/prepare build artifact
-        run: |
-          echo "Preparing build artifact..."
-      - name: configure github pages
-        uses: actions/configure-pages@v2
-        with:
-          static_site_generator: next
-      - run: npm install
-      - run: npm run build
-      - name: upload artifacts
-        uses: actions/upload-pages-artifact@v1
-        with: 
-          path: '/out'
-      - name: Deploy to GitHub pages
-        uses: actions/deploy-pages@v1
-        with:
-          publish_dir: out
+    - name: Checkout
+      uses: actions/checkout@v3
 
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
 
+    - name: Install dependencies
+      run: npm ci
 
-#Install dependencies
+    - name: Build Angular app
+      run: |
+        npm run build -- --output-path=docs --base-href=/ride-sharing-app/
 
-#Run unit tests
-
-#Lint / format checks
-
-#Build artifact
-
-#Security scans (Veracode, Black Duck)
-
-#Upload artifacts (optional, for later CD step)
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs

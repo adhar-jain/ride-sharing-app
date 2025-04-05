@@ -45,7 +45,7 @@ jobs:
        #run unit tests
       - name: Run unit tests
         run: |
-          npm test
+          npm test -- --browsers=ChromeHeadless
       #lint / format checks
       - name: Lint / format checks
         run: |

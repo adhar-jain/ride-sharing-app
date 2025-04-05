@@ -33,10 +33,9 @@ jobs:
       - name: Build Angular app
         run: npm run build -- --output-path=dist --base-href=/ride-sharing-app/
 
-      - name: Upload build output
-        uses: actions/upload-artifact@v4
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v2
         with:
-          name: github-pages
           path: ./dist
 
   deploy:
@@ -50,12 +49,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          publish-dir: ./dist
-          publish-branch: gh-pages
-          publish-repo: ${{ github.repository }}
-          publish-path: /
-          commit-message: "Deploy to GitHub Pages"
-          force: true
-          branch: gh-pages

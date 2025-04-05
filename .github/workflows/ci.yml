@@ -34,6 +34,7 @@ jobs:
   test:
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       #checkout code
       - name: Checkout code
@@ -50,6 +51,8 @@ jobs:
       - name: Lint / format checks
         run: |
           npm run lint
+      - name: Cleanup processes
+        run: pkill -f chrome || true
   deploy:
     needs: test
     runs-on: ubuntu-latest

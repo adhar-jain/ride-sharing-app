@@ -34,7 +34,7 @@ jobs:
         run: npm run build -- --output-path=dist --base-href=/ride-sharing-app/
 
       - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v2  # Ensure this action is correctly used for uploading artifacts
+        uses: actions/upload-pages-artifact@v2.1.0  # Ensure this action is correctly used for uploading artifacts
         with:
           path: ./dist
 

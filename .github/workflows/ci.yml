@@ -20,10 +20,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
@@ -33,15 +33,15 @@ jobs:
       - name: Build Angular app
         run: npm run build -- --output-path=dist --base-href=/ride-sharing-app/
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
         with:
+          name: github-pages
           path: ./dist
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -49,9 +49,13 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v2
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          publish-dir: ./dist
+          publish-branch: gh-pages
+          publish-repo: ${{ github.repository }}
+          publish-path: /
+          commit-message: "Deploy to GitHub Pages"
+          force: true
           branch: gh-pages
-          folder: dist
-          token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist

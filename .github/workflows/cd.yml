@@ -1,8 +1,50 @@
-#CD Workflow (Trigger on tag or merge to main/release):
-#Checkout code
+name: build-test-deploy
 
-#Download/prepare build artifact
-
-#Deploy to PCF
-
-#Smoke tests or basic health checks
+on: 
+  push:
+  workflow_dispatch:  
+    
+jobs: 
+  build:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: checkout repo
+        uses: actions/checkout@v4
+      - name: use node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - run: npm install
+      - run: npm run build
+  deploy:
+    needs: build
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    environment:
+      name: production
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+        with: 
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: use node.js        
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - name: configure github pages
+        uses: actions/configure-pages@v4
+        with:
+          static_site_generator: next
+      - run: npm install
+      - run: npm run build
+      - name: upload artifacts
+        uses: actions/upload-pages-artifact@v3
+        with: 
+          path: './out'
+      - name: deploy
+        id: depoloyment
+        uses: actions/deploy-pages@v4

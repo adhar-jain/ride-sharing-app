@@ -41,7 +41,7 @@ jobs:
           static_site_generator: next
       - run: npm install
       - run: | 
-          npm run build
+          npm run build -- --output-path=dist --base-href=/ride-sharing-app/
           echo ${{ steps.deployment.outputs.page_url }}
       - name: upload artifacts
         uses: actions/upload-pages-artifact@v3

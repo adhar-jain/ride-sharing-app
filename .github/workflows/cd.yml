@@ -48,5 +48,5 @@ jobs:
         with: 
           path: './out'
       - name: deploy
-        id: depoloyment
+        id: deployment
         uses: actions/deploy-pages@v4

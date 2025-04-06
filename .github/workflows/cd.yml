@@ -2,6 +2,9 @@ name: build-test-deploy
 
 on: 
   push:
+    branches:
+      - main
+      - gh-pages
   workflow_dispatch:  
 
 jobs: 
@@ -19,13 +22,13 @@ jobs:
 
   deploy:
     needs: build
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       pages: write
       id-token: write
     environment:
       name: production
-    runs-on: ubuntu-latest
     steps:
       - name: checkout repo
         uses: actions/checkout@v4
@@ -50,5 +53,7 @@ jobs:
       - name: deploy
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          branch: gh-pages
       - name: echo deployment URL
         run: echo "Deployed to ${{ steps.deployment.outputs.page_url }}"

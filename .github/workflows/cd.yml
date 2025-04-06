@@ -40,7 +40,9 @@ jobs:
         with:
           static_site_generator: next
       - run: npm install
-      - run: npm run build
+      - run: | 
+          npm run build
+          echo ${{ steps.deployment.outputs.page_url }}
       - name: upload artifacts
         uses: actions/upload-pages-artifact@v3
         with: 

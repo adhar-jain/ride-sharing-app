@@ -41,6 +41,8 @@ jobs:
           static_site_generator: next
       - run: npm install
       - run: npm run build -- --output-path=dist --base-href=/ride-sharing-app/
+      - name: list files for debug
+        run: ls -R ./dist
       - name: upload artifacts
         uses: actions/upload-pages-artifact@v3
         with: 

@@ -3,7 +3,7 @@ name: build-test-deploy
 on: 
   push:
   workflow_dispatch:  
-    
+
 jobs: 
   build:
     runs-on: ubuntu-latest
@@ -44,7 +44,7 @@ jobs:
       - name: upload artifacts
         uses: actions/upload-pages-artifact@v3
         with: 
-          path: './out'
+          path: './build'  # Updated path
       - name: deploy
         id: depoloyment
         uses: actions/deploy-pages@v4

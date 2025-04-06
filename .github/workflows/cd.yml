@@ -3,7 +3,7 @@ name: build-test-deploy
 on: 
   push:
     branches:
-      - gh-pages  # Add this line to specify the branch for deployment
+      - gh-pages  # Ensure the workflow runs on the gh-pages branch
   workflow_dispatch:  
 
 jobs: 

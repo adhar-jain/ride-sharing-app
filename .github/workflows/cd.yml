@@ -1,15 +1,3 @@
-{
-  "endpoint": "/repos/adhar-jain/ride-sharing-app/actions/workflows/cd.yml/runs",
-  "endpointDescription": "list workflow runs for a workflow",
-  "repo": "adhar-jain/ride-sharing-app",
-  "task": "get latest workflow run ID for build-test-deploy"
-}
-```It seems I'm unable to fetch the job logs directly for the given run ID. Let's re-evaluate the workflow file and ensure everything is correctly configured.
-
-### Updated Workflow File
-Let's ensure that the `cd.yml` workflow correctly handles the build and deploy steps without any conflicts.
-
-```yaml name=.github/workflows/cd.yml
 name: build-test-deploy
 
 on: 

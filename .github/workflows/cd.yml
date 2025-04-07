@@ -57,7 +57,5 @@ jobs:
       - name: deploy
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          branch: gh-pages
       - name: echo deployment URL
         run: echo "Deployed to ${{ steps.deployment.outputs.page_url }}"

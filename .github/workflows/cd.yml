@@ -23,7 +23,7 @@ jobs:
       - name: Debug dist directory
         run: ls -R dist
       - name: Copy index.html to 404.html
-        run: cp dist/index.html dist/404.html
+        run: cp dist/ride-sharing-app/browser/test/index.html dist/404.html
       - name: Upload dist artifact
         uses: actions/upload-artifact@v4
         with:

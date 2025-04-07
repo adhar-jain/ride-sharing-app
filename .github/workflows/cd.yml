@@ -3,7 +3,7 @@ name: build-test-deploy
 on: 
   push:
     branches:
-     # - main
+      - main
       - gh-pages
   workflow_dispatch:  
 
@@ -19,45 +19,4 @@ jobs:
           node-version: '20.x'
       - run: npm install
       - run: npm run build -- --output-path=dist --base-href=/ride-sharing-app/
-      - name: copy index.html to dist
-        run: cp src/index.html ./dist/index.html
-      - name: verify index.html
-        run: if [ ! -f ./dist/index.html ]; then echo "index.html not found!"; exit 1; fi
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
-    environment:
-      name: production
-    steps:
-      - name: checkout repo
-        uses: actions/checkout@v4
-        with: 
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: use node.js        
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-      - name: configure github pages
-        uses: actions/configure-pages@v4
-        with:
-          static_site_generator: next
-      - run: npm install
-      - run: npm run build -- --output-path=dist --base-href=/ride-sharing-app/
-      - name: list files for debug
-        run: ls -R ./dist
-      - name: upload artifacts
-        uses: actions/upload-pages-artifact@v3
-        with: 
-          path: './dist'
-      - name: deploy
-        id: deployment
-        uses: actions/deploy-pages@v4
-        with:
-          branch: gh-pages
-      - name: echo deployment URL
-        run: echo "Deployed to ${{ steps.deployment.outputs.page_url }}"
+      - name: copy index.html to 

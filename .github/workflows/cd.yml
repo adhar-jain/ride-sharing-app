@@ -24,7 +24,7 @@ jobs:
         run: ls -R dist
       - name: copy index.html to dist root
         # Adjusted path to match Angular's default build output
-        run: cp dist/index.html dist/index.html
+        run: cp dist/ride-sharing-app/browser/test/index.html dist/index.html
       - name: verify index.html
         run: if [ ! -f dist/index.html ]; then echo "index.html not found in dist directory!"; exit 1; fi
       - name: list dist directory after index.html copy for debug

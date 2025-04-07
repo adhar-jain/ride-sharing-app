@@ -26,17 +26,16 @@ jobs:
         run: echo > .nojekyll
       - name: Debug dist directory
         run: ls -R dist
-      - name: Copy index.html to index.html
-        run: |
-          cp dist/browser/test/index.html dist/index.html
+     
       - name: Checkout gh-pages branch
         run: |
           git fetch origin gh-pages
           git checkout gh-pages || git checkout --orphan gh-pages
           git reset --hard
       
-      - name: Copy index.html to root
-        run: cp dist/browser/index.html dist/index.html
+      - name: Copy index.html to index.html
+        run: |
+          cp dist/browser/test/index.html dist/index.html
       
       - name: Commit and push to gh-pages branch
         run: |

@@ -40,6 +40,8 @@ jobs:
           git clean -fdx
       - name: copy built files to gh-pages branch
         run: cp -r ../dist/* .
+      - name: list working directory for debug
+        run: ls -R .
       - name: commit and push to gh-pages branch
         run: |
           git add .

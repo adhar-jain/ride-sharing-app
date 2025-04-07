@@ -31,15 +31,15 @@ jobs:
           cp dist/browser/test/index.html dist/index.html
       - name: Checkout gh-pages branch
         run: |
-          git config --global user.email "adharjain@gmail.com"
-          git config --global user.name "adhar-jain"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git fetch origin gh-pages
-          git checkout gh-pages
-      - name: Initialize gh-pages branch
-        run: |
           git checkout gh-pages || git checkout --orphan gh-pages
-          git reset --hard          
+          git reset --hard
+      
+      - name: Copy index.html to root
+        run: cp dist/browser/index.html dist/index.html
+      
+      - name: Commit and push to gh-pages branch
+        run: |
           git add .
           git commit -m "Deploy to GitHub Pages"
           git push origin gh-pages

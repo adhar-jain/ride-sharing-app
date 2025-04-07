@@ -42,10 +42,13 @@ jobs:
         with:
           name: dist
           path: dist
+      - name: Inspect environment
+        run: env
       - name: list dist directory after download for debug
         run: |
           ls -R dist
-          cp -r dist/* .
+          pwd
+          run: cp -r dist/. .
       - name: checkout gh-pages branch
         uses: actions/checkout@v2
         with:

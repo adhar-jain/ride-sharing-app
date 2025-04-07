@@ -25,7 +25,7 @@ jobs:
       - name: verify index.html
         run: if [ ! -f dist/index.html ]; then echo "index.html not found in dist directory!"; exit 1; fi
       - name: upload dist artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: dist
           path: dist
@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: download dist artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v2
         with:
           name: dist
           path: dist

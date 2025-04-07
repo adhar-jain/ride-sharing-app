@@ -31,9 +31,13 @@ jobs:
           cp dist/browser/test/index.html dist/index.html
       - name: Commit and push to gh-pages branch
         run: |
-            git add .
-            git commit -m "Deploy to GitHub Pages"
-            git push origin gh-pages
+              git config --global user.email "adharjain@gmail.com"
+              git config --global user.name "adhar-jain"
+              git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+              
+              git add .
+              git commit -m "Deploy to GitHub Pages"
+              git push origin gh-pages
         
       - name: Upload dist artifact
         uses: actions/upload-artifact@v4

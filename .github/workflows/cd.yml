@@ -37,6 +37,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+    - name: Add .nojekyll
+      run: echo > .nojekyll          
     - name: Download dist artifact
       uses: actions/download-artifact@v4
       with:

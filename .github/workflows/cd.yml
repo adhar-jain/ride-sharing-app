@@ -3,7 +3,7 @@ name: build-test-deploy
 on: 
   push:
     branches:
-      - main
+     # - main
       - gh-pages
   workflow_dispatch:  
 

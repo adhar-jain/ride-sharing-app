@@ -3,8 +3,7 @@ name: build-test-deploy
 on: 
   push:
     branches:
-      #- main
-      - gh-pages
+      - main
   workflow_dispatch:  
 
 jobs: 
@@ -19,10 +18,10 @@ jobs:
           node-version: '20.x'
       - run: npm install
       - run: npm run build -- --output-path=dist --base-href=/ride-sharing-app/
-      - name: copy index.html to dist
-        run: cp dist/browser/test/index.html dist/index.html
       - name: verify index.html
-        run: if [ ! -f dist/index.html ]; then echo "index.html not found!"; exit 1; fi
+        run: if [ ! -f dist/browser/index.html ]; then echo "index.html not found in browser directory!"; exit 1; fi
+      - name: copy index.html to dist root
+        run: cp dist/browser/index.html dist/index.html
 
   deploy:
     needs: build
@@ -34,28 +33,21 @@ jobs:
     environment:
       name: production
     steps:
-      - name: checkout repo
+      - name: checkout gh-pages branch
         uses: actions/checkout@v4
-        with: 
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: use node.js        
-        uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          ref: gh-pages
+      - name: copy built files to gh-pages branch
+        run: |
+          git rm -rf .
+          cp -r ../dist/* .
+          git add .
+          git commit -m "Deploy to GitHub Pages"
+      - name: push to gh-pages branch
+        run: git push origin gh-pages
       - name: configure github pages
         uses: actions/configure-pages@v4
         with:
-          static_site_generator: next
-      - run: npm install
-      - run: npm run build -- --output-path=dist --base-href=/ride-sharing-app/
-      - name: list files for debug
-        run: ls -R dist
-      - name: upload artifacts
-        uses: actions/upload-pages-artifact@v3
-        with: 
-          path: 'dist'
-      - name: deploy
-        id: deployment
-        uses: actions/deploy-pages@v4
+          static_site_generator: none
       - name: echo deployment URL
         run: echo "Deployed to ${{ steps.deployment.outputs.page_url }}"

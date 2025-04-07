@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - name: checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
       - name: use node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v2
         with:
           node-version: '20.x'
       - run: npm install
@@ -25,7 +25,7 @@ jobs:
       - name: verify index.html
         run: if [ ! -f dist/index.html ]; then echo "index.html not found in dist directory!"; exit 1; fi
       - name: upload dist artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist
@@ -35,12 +35,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: download dist artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
       - name: checkout gh-pages branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
         with:
           ref: gh-pages
           persist-credentials: false

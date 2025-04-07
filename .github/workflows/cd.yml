@@ -20,6 +20,8 @@ jobs:
       - run: npm run build -- --output-path=dist --base-href=/ride-sharing-app/
       - name: list dist directory for debug
         run: ls -R dist
+      - name: copy index.html to dist root
+        run: cp dist/browser/test/index.html dist/index.html
       - name: verify index.html
         run: if [ ! -f dist/index.html ]; then echo "index.html not found in dist directory!"; exit 1; fi
 

@@ -31,7 +31,9 @@ jobs:
         with:
           name: dist
           path: dist
-
+      - name: Debug workspace
+        run: ls -R /home/runner/work/<repo_name>/<repo_name>
+  
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -42,7 +44,9 @@ jobs:
           name: dist
           path: dist
       - name: list dist directory after download for debug
-        run: ls -R dist
+        run: |
+          ls -R dist
+          cp -r /home/runner/work/ride-sharing-app/ride-sharing-app/dist/* .
       - name: checkout gh-pages branch
         uses: actions/checkout@v2
         with:

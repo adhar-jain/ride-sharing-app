@@ -3,7 +3,7 @@ name: build-test-deploy
 on: 
   push:
     branches:
-      - gh-pages
+      - main
   workflow_dispatch:  
 
 jobs: 
@@ -26,28 +26,22 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
-    environment:
-      name: production
     steps:
       - name: checkout gh-pages branch
         uses: actions/checkout@v4
         with:
           ref: gh-pages
-      - name: copy built files to gh-pages branch
+          persist-credentials: false
+      - name: clean gh-pages branch
         run: |
           git rm -rf .
-          cp -r ../dist/* .
+          git clean -fdx
+      - name: copy built files to gh-pages branch
+        run: cp -r ../dist/* .
+      - name: commit and push to gh-pages branch
+        run: |
           git add .
           git commit -m "Deploy to GitHub Pages"
-      - name: push to gh-pages branch
-        run: git push origin gh-pages
-      - name: configure github pages
-        uses: actions/configure-pages@v4
-        with:
-          static_site_generator: none
+          git push origin gh-pages
       - name: echo deployment URL
-        run: echo "Deployed to ${{ steps.deployment.outputs.page_url }}"
+        run: echo "Deployed to https://adhar-jain.github.io/ride-sharing-app/"

@@ -32,8 +32,7 @@ jobs:
           name: dist
           path: dist
       - name: Debug workspace
-        run: ls -R /home/runner/work/<repo_name>/<repo_name>
-  
+        run: ls -R /home/runner/work/ride-sharing-app/ride-sharing-app  
   deploy:
     needs: build
     runs-on: ubuntu-latest

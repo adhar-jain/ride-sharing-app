@@ -12,6 +12,10 @@ jobs:
     steps: 
       - name: checkout repo
         uses: actions/checkout@v2
+        with:
+            persist-credentials: false
+      - name: Debug branch state
+        run: git log -1
       - name: use node.js
         uses: actions/setup-node@v2
         with:
@@ -25,6 +29,12 @@ jobs:
       - name: Copy index.html to index.html
         run: |
           cp dist/browser/test/index.html dist/index.html
+      - name: Commit and push to gh-pages branch
+        run: |
+            git add .
+            git commit -m "Deploy to GitHub Pages"
+            git push origin gh-pages
+        
       - name: Upload dist artifact
         uses: actions/upload-artifact@v4
         with:

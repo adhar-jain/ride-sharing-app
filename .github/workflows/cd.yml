@@ -20,22 +20,15 @@ jobs:
       - run: npm run build -- --base-href=/ride-sharing-app/
       - name: Add .nojekyll
         run: echo > .nojekyll
-      - name: list dist directory for debug
+      - name: Debug dist directory
         run: ls -R dist
-      - name: copy index.html to dist root
-        # Adjusted path to match Angular's default build output
-        run: cp dist/ride-sharing-app/browser/test/index.html dist/index.html
-      - name: verify index.html
-        run: if [ ! -f dist/index.html ]; then echo "index.html not found in dist directory!"; exit 1; fi
-      - name: list dist directory after index.html copy for debug
-        run: ls -R dist
-      - name: upload dist artifact
+      - name: Copy index.html to 404.html
+        run: cp dist/index.html dist/404.html
+      - name: Upload dist artifact
         uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist
-      - name: Debug workspace
-        run: ls -R /home/runner/work/ride-sharing-app/ride-sharing-app  
   deploy:
     needs: build
     runs-on: ubuntu-latest

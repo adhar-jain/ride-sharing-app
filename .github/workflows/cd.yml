@@ -140,10 +140,10 @@ jobs:
 
       - name: Setup Git credentials with PAT
         run: |
-            git config --global user.email "actions@github.com"
-            git config --global user.name "GitHub Actions"
-            git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
-
+          git config --global user.email "adharjain@gmail.com"
+          git config --global user.name "adhar-jain"
+          git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
+    
       - name: Debug remote URL
         run: git remote -v
         

@@ -142,7 +142,6 @@ jobs:
 
       - name: Initialize Git repository
         run: |
-          git remote add origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
           git fetch origin gh-pages
           git checkout gh-pages || git checkout --orphan gh-pages
 

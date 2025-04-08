@@ -144,8 +144,14 @@ jobs:
             git config --global user.name "GitHub Actions"
             git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
 
-      - name: Debug Git remote
+      - name: Debug remote URL
         run: git remote -v
+        
+      - name: Debug authentication
+        run: |
+            echo "Using token for authentication"
+            curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/user/repos
+
 
       - name: git checkout & hard reset
         run: |

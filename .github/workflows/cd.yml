@@ -74,8 +74,8 @@ jobs:
         run: |
           git config --global user.email "adharjain@gmail.com"
           git config --global user.name "adhar-jain"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-
+          git remote set-url origin https://x-access-token:${{ secrets.pat_token }}@github.com/${{ github.repository }}
+      
      
       - name: Commit and push to gh-pages branch
         run: |

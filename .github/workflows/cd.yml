@@ -94,11 +94,12 @@ jobs:
       # Copies the `index.html` file from the Angular build output to the root of the `dist` folder.
       - name: Copy index.html from dist/browser/test to dist root
         run: cp dist/browser/test/index.html dist/index.html
-              
+      
       - name: Debug working directory
         run: |
             pwd       
             git add .
+            git status 
             git commit -m "Deploy to GitHub Pages"
             git push origin gh-pages --force
 

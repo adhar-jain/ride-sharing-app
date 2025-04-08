@@ -4,40 +4,89 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:  
+  # This line defines a trigger for the GitHub Actions workflow.
+  # The `workflow_dispatch` event allows the workflow to be manually triggered
+  # from the GitHub Actions interface. This is useful for running workflows on-demand,
+  # such as for testing or deploying specific changes.
+  workflow_dispatch:
+
+permissions:
+  # Grants read access to the repository contents, necessary for actions like checking out the repository.
+  contents: read 
+  pages: write
+  id-token: write
+
+  # This section of the code handles concurrency.
+  # Ensure that shared resources are accessed in a thread-safe manner.
+  # Use locks, semaphores, or other synchronization mechanisms where necessary.
+  # Avoid deadlocks by acquiring locks in a consistent order.
+  # Minimize the critical section to reduce contention and improve performance.
+  # Consider using concurrent data structures if applicable.
+  # Test thoroughly to ensure correctness under concurrent execution.
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps: 
       - name: checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
+            # Checkout the repository with submodules and fetch all history for tags and branches
+            # Ensures the repository and its submodules are fully cloned, with complete commit history.
+            submodules: true
+            fetch-depth: 0            
             persist-credentials: false
+
+      # Debug the current branch state
+      # Logs the latest commit to help verify the branch and commit being used in the workflow.
       - name: Debug branch state
         run: git log -1
+
+      # Set up Node.js environment
+      # Configures the workflow to use Node.js version 20.x, which is required for the project.
       - name: use node.js
         uses: actions/setup-node@v2
         with:
           node-version: '20.x'
+
+      # Install project dependencies
+      # Runs `npm install` to install all required dependencies listed in package.json.
       - run: npm install
+
+      # Build the Angular project
+      # Builds the project using Angular CLI, specifying the output directory and base href.
       - run: npm run build -- --output-path=dist --base-href=/ride-sharing-app/
+
+      # Add .nojekyll file
+      # Creates a .nojekyll file to bypass Jekyll processing on GitHub Pages.
       - name: Add .nojekyll
         run: echo > .nojekyll
+
+      # Debug the contents of the dist directory
+      # Lists all files and directories recursively in the `dist` folder to verify the build output.
       - name: Debug dist directory
         run: ls -R dist
-      - name: Copy index.html to index.html
+
+      # Copy index.html to the root of the dist directory
+      # Copies the `index.html` file from the Angular build output to the root of the `dist` folder.
+      - name: Copy index.html from dist/browser/test to dist root
         run: |
           cp dist/browser/test/index.html dist/index.html
+
       - name: Commit and push to gh-pages branch
         run: |
               git config --global user.email "adharjain@gmail.com"
               git config --global user.name "adhar-jain"
               git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
               
+              git checkout gh-pages || git checkout --orphan gh-pages
+              git reset --hard
               git add .
               git commit -m "Deploy to GitHub Pages"
-              git push origin gh-pages
+              git push origin gh-pages --force
         
       - name: Upload dist artifact
         uses: actions/upload-artifact@v4

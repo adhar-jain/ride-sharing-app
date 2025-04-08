@@ -99,7 +99,7 @@ jobs:
             echo "Current status:"
             git status 
             echo "pushing to gh-pages branch"
-            git push --force https://${{ secrets.ACTIONS_DEPLOY_KEY }}@github.com/adhar-jain/ride-sharing-app.git gh-pages
+            git push origin gh-pages --force
             echo "pushed to gh-pages branch"
 
       # List all files and directories recursively in the `dist` folder to verify the build output.

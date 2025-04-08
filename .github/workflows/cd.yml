@@ -133,12 +133,40 @@ jobs:
           git config --global user.email "adharjain@gmail.com"
           git config --global user.name "adhar-jain"
           git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
-  
       - name: Debug Git remote
         run: git remote -v
-  
+
+      - name: Copy index.html from dist/browser/test to dist root
+        run: cp dist/browser/test/index.html dist/index.html
+      
       - name: Commit and push to gh-pages branch
         run: |
-          git add .
-          git commit -m "Deploy to GitHub Pages" || echo "No changes to commit"
-          git push origin gh-pages --force
+              git fetch origin gh-pages              
+              git checkout gh-pages || git checkout --orphan gh-pages
+              git reset --hard
+
+      # Copy index.html to the root of the dist directory
+      # Copies the `index.html` file from the Angular build output to the root of the `dist` folder.
+      
+      - name: Debug working directory
+        run: |
+            pwd   
+            echo "Current branch:"
+            git branch --show-current    
+            git add .
+            echo "Current commit:"
+            git commit -m "Deploy to GitHub Pages" || echo "No changes to commit"
+            echo "Current status:"
+            git status 
+            echo "pushing to gh-pages branch"
+            git push origin gh-pages --force
+            echo "pushed to gh-pages branch"
+
+      #- name: Debug Git remote
+      #  run: git remote -v
+  
+      #- name: Commit and push to gh-pages branch
+      #  run: |
+      #    git add .
+      #    git commit -m "Deploy to GitHub Pages" || echo "No changes to commit"
+      #    git push origin gh-pages --force

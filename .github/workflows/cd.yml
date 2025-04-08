@@ -133,7 +133,28 @@ jobs:
   
       - name: Debug root files
         run: ls -R .
-  
+
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          persist-credentials: true
+
+      - name: Initialize Git repository
+        run: |
+          git init
+          git remote add origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
+          git fetch origin gh-pages
+          git checkout gh-pages || git checkout --orphan gh-pages
+
+      - name: Debug Git repository state
+        run: ls -a
+
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+
       - name: Commit and push to gh-pages branch
         run: |
           git fetch origin gh-pages

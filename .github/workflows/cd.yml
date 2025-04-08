@@ -129,7 +129,7 @@ jobs:
           path: dist
   
       
-      - name: Debug root files
+      - name: Debug root and list files
         run: ls -R .
 
       - name: Checkout gh-pages branch
@@ -153,17 +153,12 @@ jobs:
           git checkout gh-pages || git checkout --orphan gh-pages
           git reset --hard
 
-      - name: Debug Git repository state
-        run: ls -a
-
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: true
-
+      - name: list files
+        run: ls -R
+      
       - name: Copy index.html to repository root
         run: cp dist/index.html ./index.html
   
-          
       - name: Commit and push to gh-pages branch
         run: |
           git add .

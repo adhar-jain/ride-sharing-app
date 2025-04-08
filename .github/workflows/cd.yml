@@ -76,14 +76,7 @@ jobs:
           git config --global user.name "adhar-jain"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
 
-      - name: Checkout gh-pages branch
-        run: |
-          git fetch origin gh-pages
-          git checkout gh-pages || git checkout --orphan gh-pages
-          git reset --hard
-      
-      
-      
+     
       - name: Commit and push to gh-pages branch
         run: |
               git fetch origin gh-pages              
@@ -106,7 +99,7 @@ jobs:
             echo "Current status:"
             git status 
             echo "pushing to gh-pages branch"
-            git push https://${ACTIONS_DEPLOY_KEY}@github.com/adhar-jain/ride-sharing-app.git gh-pages -force
+            git push https://${ACTIONS_DEPLOY_KEY}@github.com/adhar-jain/ride-sharing-app.git gh-pages --force
             echo "pushed to gh-pages branch"
 
       # List all files and directories recursively in the `dist` folder to verify the build output.

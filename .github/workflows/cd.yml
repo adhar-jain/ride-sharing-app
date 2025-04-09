@@ -54,7 +54,9 @@ jobs:
 
       # Install project dependencies
       # Runs `npm install` to install all required dependencies listed in package.json.
-      - run: npm install
+      - run: |
+          npm install
+          npm cache clean
 
       # Build the Angular project
       # Builds the project using Angular CLI, specifying the output directory and base href.
@@ -145,7 +147,7 @@ jobs:
           echo "Using token for authentication"
           curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/user/repos
 
-      - name: Commit and push to gh-pages branch
+      - name: fetch gh-pages branch
         run: |
               git fetch origin gh-pages              
               git checkout gh-pages || git checkout --orphan gh-pages
@@ -154,15 +156,11 @@ jobs:
       - name: Debug dist directory (before)
         run: ls -R dist
 
-      - name: Debug dist directory (after)
-        run: ls -la
-
       - name: Copy index.html from dist/browser/test to dist root
         run: cp dist/index.html ./index.html
         
       - name: Debug working directory
         run: |
-            ls -la
             git add -A
             echo "Current commit:"
             git commit -m "Deploy to GitHub Pages" || echo "No changes to commit"
@@ -171,7 +169,8 @@ jobs:
             echo "pushing to gh-pages branch"
             git push origin gh-pages --force
             echo "pushed to gh-pages branch"
-
+            ls -R dist
+            ls -la
       #- name: Debug Git remote
       #  run: git remote -v
   

@@ -152,7 +152,7 @@ jobs:
               git reset --hard
 
       - name: Copy index.html from dist/browser/test to dist root
-        run: cp dist/index.html ./index.html
+        run: cp dist/ride-sharing-app/browser/index.html ./index.html
 
       # Copy index.html to the root of the dist directory
       # Copies the `index.html` file from the Angular build output to the root of the `dist` folder.
@@ -160,8 +160,6 @@ jobs:
       - name: Debug working directory
         run: |
             pwd   
-            echo "Current branch:"
-            git branch --show-current    
             git add .
             echo "Current commit:"
             git commit -m "Deploy to GitHub Pages" || echo "No changes to commit"

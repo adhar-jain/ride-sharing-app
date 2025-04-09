@@ -109,12 +109,6 @@ jobs:
       - name: Debug remote URL
         run: git remote -v
 
-      # Debug authentication
-      - name: Debug authentication
-        run: |
-          echo "Using token for authentication"
-          curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/user/repos
-
       # Fetch the gh-pages branch
       - name: Fetch gh-pages branch
         run: |
@@ -136,6 +130,10 @@ jobs:
       # Copy index.html to the root of the repository
       - name: Copy index.html from dist to root
         run: cp dist/index.html ./index.html
+
+      # Debug root directory after copying index.html
+      - name: Debug root directory after copy
+        run: ls -la
 
       # Commit and push changes to the gh-pages branch
       - name: Commit and push to gh-pages branch

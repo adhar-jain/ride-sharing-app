@@ -155,7 +155,7 @@ jobs:
         run: ls -R dist
       
       - name: Copy index.html from dist/browser/test to dist root
-        run: cp dist/ride-sharing-app/browser/index.html ./index.html
+        run: cp dist/index.html ./index.html
 
       - name: Debug dist directory (after)
         run: ls -R dist

@@ -122,10 +122,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     
-    permissions:
-      contents: write
-      pull-requests: write
-      repository-projects: write
+    permissions: write-all
       
     steps:
       - name: Checkout gh-pages branch

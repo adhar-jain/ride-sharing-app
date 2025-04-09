@@ -157,11 +157,6 @@ jobs:
       - name: Debug dist directory (after)
         run: ls -la
 
-      - name: Check ignored files
-        run: git check-ignore *
-      # Copy index.html to the root of the dist directory
-      # Copies the `index.html` file from the Angular build output to the root of the `dist` folder.
-      
       - name: Copy index.html from dist/browser/test to dist root
         run: cp dist/index.html ./index.html
         

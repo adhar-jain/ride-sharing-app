@@ -58,7 +58,7 @@ jobs:
 
       # Build the Angular project
       # Builds the project using Angular CLI, specifying the output directory and base href.
-      - run: npm run build -- --output-path=dist --base-href=/ride-sharing-app/
+      - run: ng build --prod --output-path=dist/ride-sharing-app --base-href=/ride-sharing-app/
 
       # Add .nojekyll file
       # Creates a .nojekyll file to bypass Jekyll processing on GitHub Pages.

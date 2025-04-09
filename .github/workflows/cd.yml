@@ -63,19 +63,19 @@ jobs:
     permissions: write-all
     
     steps:
-      # Setup Git credentials
-      - name: Setup Git credentials with PAT
-        run: |
-          git config --global user.email "adharjain@gmail.com"
-          git config --global user.name "adhar-jain"
-          git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
-
       # Checkout the gh-pages branch
       - name: Checkout gh-pages branch
         uses: actions/checkout@v4
         with:
           ref: gh-pages
           persist-credentials: true
+
+      # Setup Git credentials
+      - name: Setup Git credentials with PAT
+        run: |
+          git config --global user.email "adharjain@gmail.com"
+          git config --global user.name "adhar-jain"
+          git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
 
       # Clean the gh-pages branch
       - name: Clean gh-pages branch

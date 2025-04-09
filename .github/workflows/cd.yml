@@ -45,6 +45,10 @@ jobs:
       - name: Add .nojekyll
         run: echo > dist/ride-sharing-app/.nojekyll
 
+      # Copy index.html to 404.html
+      - name: Copy index.html to 404.html
+        run: cp dist/ride-sharing-app/index.html dist/ride-sharing-app/404.html
+
       # Debug the contents of the dist directory
       - name: Debug dist directory
         run: ls -R dist
@@ -101,6 +105,10 @@ jobs:
       # Debug root directory after copying files
       - name: Debug root directory
         run: ls -la
+
+      # Debug gh-pages branch
+      - name: Debug gh-pages branch
+        run: ls -R
 
       # Commit and push changes to the gh-pages branch
       - name: Commit and push to gh-pages branch

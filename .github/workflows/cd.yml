@@ -56,7 +56,7 @@ jobs:
       # Runs `npm install` to install all required dependencies listed in package.json.
       - run: |
           npm install
-          npm cache clean
+          npm cache clean --force
 
       # Build the Angular project
       # Builds the project using Angular CLI, specifying the output directory and base href.

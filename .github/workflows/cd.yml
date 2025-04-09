@@ -4,25 +4,13 @@ on:
   push:
     branches:
       - main
-  # This line defines a trigger for the GitHub Actions workflow.
-  # The `workflow_dispatch` event allows the workflow to be manually triggered
-  # from the GitHub Actions interface. This is useful for running workflows on-demand,
-  # such as for testing or deploying specific changes.
   workflow_dispatch:
 
 permissions:
-  # Grants read access to the repository contents, necessary for actions like checking out the repository.
   contents: read 
   pages: write
   id-token: write
 
-  # This section of the code handles concurrency.
-  # Ensure that shared resources are accessed in a thread-safe manner.
-  # Use locks, semaphores, or other synchronization mechanisms where necessary.
-  # Avoid deadlocks by acquiring locks in a consistent order.
-  # Minimize the critical section to reduce contention and improve performance.
-  # Consider using concurrent data structures if applicable.
-  # Test thoroughly to ensure correctness under concurrent execution.
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -31,58 +19,42 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps: 
-      - name: checkout repo
+      # Checkout the repository
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-            # Checkout the repository with submodules and fetch all history for tags and branches
-            # Ensures the repository and its submodules are fully cloned, with complete commit history.
-            submodules: true
-            fetch-depth: 0            
-            persist-credentials: false
-
-      # Debug the current branch state
-      # Logs the latest commit to help verify the branch and commit being used in the workflow.
-      - name: Debug branch state
-        run: git log -1
+          fetch-depth: 0
 
       # Set up Node.js environment
-      # Configures the workflow to use Node.js version 20.x, which is required for the project.
-      - name: use node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '20.x'
 
-      # Install project dependencies
-      # Runs `npm install` to install all required dependencies listed in package.json.
-      - run: |
+      # Install dependencies
+      - name: Install dependencies
+        run: |
           npm install
           npm cache clean --force
 
       # Build the Angular project
-      # Builds the project using Angular CLI, specifying the output directory and base href.
-      - run: npm run build -- --output-path=dist/ride-sharing-app --base-href=/ride-sharing-app/
+      - name: Build Angular project
+        run: npm run build -- --output-path=dist/ride-sharing-app --base-href=/ride-sharing-app/
 
       # Add .nojekyll file
-      # Creates a .nojekyll file to bypass Jekyll processing on GitHub Pages.
       - name: Add .nojekyll
-        run: echo > .nojekyll
+        run: echo > dist/ride-sharing-app/.nojekyll
 
       # Debug the contents of the dist directory
-      # Lists all files and directories recursively in the `dist` folder to verify the build output.
       - name: Debug dist directory
         run: ls -R dist
 
-      - name: Clear Git credentials
-        run: |
-          git credential-cache exit
-
       # Upload the dist directory as an artifact
-      # This step uploads the `dist` directory as an artifact, allowing it to be downloaded later.        
       - name: Upload dist artifact
         uses: actions/upload-artifact@v4
         with:
           name: dist
-          path: dist
+          path: dist/ride-sharing-app
 
   deploy:
     needs: build
@@ -91,26 +63,18 @@ jobs:
     permissions: write-all
     
     steps:
-      # Checkout the repository
+      # Checkout the gh-pages branch
       - name: Checkout gh-pages branch
         uses: actions/checkout@v4
         with:
           ref: gh-pages
           persist-credentials: true
 
-      # Setup Git credentials
-      - name: Setup Git credentials with PAT
+      # Clean the gh-pages branch
+      - name: Clean gh-pages branch
         run: |
-          git config --global user.email "adharjain@gmail.com"
-          git config --global user.name "adhar-jain"
-          git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
-
-      # Fetch the gh-pages branch
-      - name: Fetch gh-pages branch
-        run: |
-          git fetch origin gh-pages              
-          git checkout gh-pages || git checkout --orphan gh-pages
-          git reset --hard
+          git rm -rf . || true
+          git clean -fdx
 
       # Download the artifact uploaded during the build job
       - name: Download dist artifact
@@ -119,25 +83,17 @@ jobs:
           name: dist
           path: dist
 
-      # Debug dist directory after downloading the artifact
-      - name: Debug dist directory (after download)
-        run: ls -R dist
-
-      # Copy index.html to the root of the repository
-      - name: Copy index.html from dist to root
-        run: cp -f dist/index.html ./index.html
+      # Copy all files from dist to the root of the repository
+      - name: Copy files from dist to root
+        run: cp -r dist/. .
 
       # Append a timestamp to index.html to force a change
       - name: Append timestamp to index.html
         run: echo "<!-- Deployed at $(date) -->" >> ./index.html
 
-      # Debug root directory after copying index.html
-      - name: Debug root directory after copy
+      # Debug root directory after copying files
+      - name: Debug root directory
         run: ls -la
-
-      # Debug copied index.html
-      - name: Debug copied index.html
-        run: cat ./index.html
 
       # Commit and push changes to the gh-pages branch
       - name: Commit and push to gh-pages branch

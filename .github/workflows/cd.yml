@@ -127,6 +127,10 @@ jobs:
       - name: Copy index.html from dist to root
         run: cp -f dist/index.html ./index.html
 
+      # Append a timestamp to index.html to force a change
+      - name: Append timestamp to index.html
+        run: echo "<!-- Deployed at $(date) -->" >> ./index.html
+
       # Debug root directory after copying index.html
       - name: Debug root directory after copy
         run: ls -la

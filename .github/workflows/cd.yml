@@ -151,14 +151,14 @@ jobs:
               git checkout gh-pages || git checkout --orphan gh-pages
               git reset --hard
 
+      - name: Debug dist directory (before)
+        run: ls -R dist
+      
       - name: Copy index.html from dist/browser/test to dist root
-        run:  |
-           
-              if ! cp dist/ride-sharing-app/browser/index.html ./index.html/ 2>/dev/null; then
-                echo "Error: File not found or copy failed"
-                exit 1
-              fi
+        run: cp dist/ride-sharing-app/browser/index.html ./index.html
 
+      - name: Debug dist directory (after)
+        run: ls -R dist
       # Copy index.html to the root of the dist directory
       # Copies the `index.html` file from the Angular build output to the root of the `dist` folder.
       

@@ -105,10 +105,6 @@ jobs:
           git config --global user.name "adhar-jain"
           git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
 
-      # Debug remote URL
-      - name: Debug remote URL
-        run: git remote -v
-
       # Fetch the gh-pages branch
       - name: Fetch gh-pages branch
         run: |
@@ -129,20 +125,19 @@ jobs:
 
       # Copy index.html to the root of the repository
       - name: Copy index.html from dist to root
-        run: cp dist/index.html ./index.html
+        run: cp -f dist/index.html ./index.html
 
       # Debug root directory after copying index.html
       - name: Debug root directory after copy
         run: ls -la
 
+      # Debug copied index.html
+      - name: Debug copied index.html
+        run: cat ./index.html
+
       # Commit and push changes to the gh-pages branch
       - name: Commit and push to gh-pages branch
         run: |
           git add -A
-          echo "Current commit:"
-          git commit -m "Deploy to GitHub Pages" || echo "No changes to commit"
-          echo "Current status:"
-          git status
-          echo "Pushing to gh-pages branch"
+          git commit -m "Deploy to GitHub Pages - $(date)" || echo "No changes to commit"
           git push origin gh-pages --force
-          echo "Pushed to gh-pages branch"

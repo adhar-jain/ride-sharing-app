@@ -76,43 +76,6 @@ jobs:
         run: |
           git credential-cache exit
 
-    #  - name: Setup Git credentials with PAT
-    #    run: |
-    #      git config --global user.email "adharjain@gmail.com"
-    #      git config --global user.name "adhar-jain"
-    #      git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
-    #  - name: Debug Git remote
-    #    run: git remote -v
-
-     # - name: Commit and push to gh-pages branch
-     #   run: |
-     #         git fetch origin gh-pages              
-     #         git checkout gh-pages || git checkout --orphan gh-pages
-     #         git reset --hard
-
-      # Copy index.html to the root of the dist directory
-      # Copies the `index.html` file from the Angular build output to the root of the `dist` folder.
-      # - name: Copy index.html from dist/browser/test to dist root
-      #   run: cp dist/browser/test/index.html dist/index.html
-      
-      #- name: Debug working directory
-      #  run: |
-      #      pwd   
-      #      echo "Current branch:"
-      #      git branch --show-current    
-      #      git add .
-      #      echo "Current commit:"
-      #      git commit -m "Deploy to GitHub Pages" || echo "No changes to commit"
-      #      echo "Current status:"
-      #      git status 
-      #      echo "pushing to gh-pages branch"
-      #      git push origin gh-pages --force
-      #      echo "pushed to gh-pages branch"
-
-      # List all files and directories recursively in the `dist` folder to verify the build output.
-      - name: Debug dist directory
-        run: ls -R dist
-
       # Upload the dist directory as an artifact
       # This step uploads the `dist` directory as an artifact, allowing it to be downloaded later.        
       - name: Upload dist artifact
@@ -120,62 +83,68 @@ jobs:
         with:
           name: dist
           path: dist
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
     
     permissions: write-all
-      
+    
     steps:
+      # Checkout the repository
       - name: Checkout gh-pages branch
         uses: actions/checkout@v4
         with:
           ref: gh-pages
           persist-credentials: true
-  
+
+      # Setup Git credentials
       - name: Setup Git credentials with PAT
         run: |
           git config --global user.email "adharjain@gmail.com"
           git config --global user.name "adhar-jain"
           git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
-      
+
+      # Debug remote URL
       - name: Debug remote URL
         run: git remote -v
-      
+
+      # Debug authentication
       - name: Debug authentication
         run: |
           echo "Using token for authentication"
           curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/user/repos
 
-      - name: fetch gh-pages branch
+      # Fetch the gh-pages branch
+      - name: Fetch gh-pages branch
         run: |
-              git fetch origin gh-pages              
-              git checkout gh-pages || git checkout --orphan gh-pages
-              git reset --hard
+          git fetch origin gh-pages              
+          git checkout gh-pages || git checkout --orphan gh-pages
+          git reset --hard
 
-      - name: Debug dist directory (before)
+      # Download the artifact uploaded during the build job
+      - name: Download dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      # Debug dist directory after downloading the artifact
+      - name: Debug dist directory (after download)
         run: ls -R dist
 
-      - name: Copy index.html from dist/browser/test to dist root
+      # Copy index.html to the root of the repository
+      - name: Copy index.html from dist to root
         run: cp dist/index.html ./index.html
-        
-      - name: Debug working directory
+
+      # Commit and push changes to the gh-pages branch
+      - name: Commit and push to gh-pages branch
         run: |
-            git add -A
-            echo "Current commit:"
-            git commit -m "Deploy to GitHub Pages" || echo "No changes to commit"
-            echo "Current status:"
-            git status
-            echo "pushing to gh-pages branch"
-            git push origin gh-pages --force
-            echo "pushed to gh-pages branch"
-            ls -R dist
-            ls -la
-      #- name: Debug Git remote
-      #  run: git remote -v
-  
-      #- name: Commit and push to gh-pages branch
-      #  run: |
-      #    git add .
-      #    git commit -m "Deploy to GitHub Pages" || echo "No changes to commit"
-      #    git push origin gh-pages --force
+          git add -A
+          echo "Current commit:"
+          git commit -m "Deploy to GitHub Pages" || echo "No changes to commit"
+          echo "Current status:"
+          git status
+          echo "Pushing to gh-pages branch"
+          git push origin gh-pages --force
+          echo "Pushed to gh-pages branch"

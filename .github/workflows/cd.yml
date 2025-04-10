@@ -45,15 +45,18 @@ jobs:
         run: |
           git config --global user.email "adharjain@gmail.com"
           git config --global user.name "adhar-jain"
-          # Check if remote origin already exists
-          if git remote get-url origin; then
-            git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
+          # Ensure the gh-pages branch exists
+          if git show-ref --quiet refs/heads/gh-pages; then
+            git checkout gh-pages
           else
-            git remote add origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
+            git checkout --orphan gh-pages
           fi
-          git checkout --orphan gh-pages
-          rm -rf .gitignore
+          # Clean the gh-pages branch
+          git rm -rf .
+          # Copy only the built files to the root of the gh-pages branch
           cp -r dist/ride-sharing-app/* .
+          # Add and commit changes
           git add -A
           git commit -m "Deploy to GitHub Pages - $(date)"
+          # Force push to gh-pages branch
           git push -f origin gh-pages

@@ -36,11 +36,11 @@ jobs:
           git config --global user.name "adhar-jain"
           git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
 
-      # Clean the gh-pages branch
-      - name: Clean the gh-pages branch
-        run: |
-          git rm -rf . || true
-          git clean -fdx
+      # # Clean the gh-pages branch
+      # - name: Clean the gh-pages branch
+      #   run: |
+      #     git rm -rf . || true
+      #     git clean -fdx
 
         # Debug gh-pages branch - After copying files
       - name: Debug gh-pages branch - Before

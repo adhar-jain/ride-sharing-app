@@ -11,9 +11,9 @@ import { Router, RouterModule } from '@angular/router';
   styleUrls: ['./sign-in.component.css']
 })
 export class SignInComponent {
-  username: string = '';
-  password: string = '';
-  loginFailed: boolean = false;
+  username = '';
+  password = '';
+  loginFailed = false;
 
   validUsername = 'admin';
   validPassword = 'password123';

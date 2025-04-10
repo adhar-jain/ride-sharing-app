@@ -47,6 +47,12 @@ jobs:
         run: |
           git rm -rf . || true
           git clean -fdx
+          git reset --hard HEAD
+          git checkout gh-pages
+
+        # Debug gh-pages branch - After copying files
+      - name: Debug gh-pages branch - Before
+        run: ls -R
 
       # Download the artifact uploaded during the build job
       - name: Download dist artifact
@@ -59,17 +65,16 @@ jobs:
       - name: Copy files from dist to root
         run: cp -r dist/. .
 
+      - name: Debug gh-pages branch - After
+        run: ls -R
+
       # Append a timestamp to index.html to force a change
       - name: Append timestamp to index.html
         run: echo "<!-- Deployed at $(date) -->" >> ./index.html
 
-      # Debug root directory after copying files
-      - name: Debug root directory
-        run: ls -la
-
-      # Debug gh-pages branch
-      - name: Debug gh-pages branch
-        run: ls -R
+      # # Debug gh-pages branch - After copying files
+      # - name: Debug gh-pages branch
+      #   run: ls -R
 
       # Commit and push changes to the gh-pages branch
       - name: Commit and push to gh-pages branch

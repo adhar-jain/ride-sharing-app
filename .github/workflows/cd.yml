@@ -17,6 +17,7 @@ concurrency:
 
 jobs:
   build:
+    name: Build ride sharing app
     runs-on: ubuntu-latest
     steps: 
       # Checkout the repository

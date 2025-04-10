@@ -42,7 +42,7 @@ jobs:
           git rm -rf . || true
           git clean -fdx
 
-      # Download the artifact uploaded during the build job
+      # Download the artifact uploaded during the CI workflow
       - name: Download dist artifact
         uses: actions/download-artifact@v4
         with:

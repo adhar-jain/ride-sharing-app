@@ -53,7 +53,10 @@ jobs:
 
         # Debug gh-pages branch - After copying files
       - name: Debug gh-pages branch - Before
-        run: ls -R
+        run: |
+          ls -la  
+          echo '--------'
+          ls -R
 
       # Download the artifact uploaded during the build job
       - name: Download dist artifact

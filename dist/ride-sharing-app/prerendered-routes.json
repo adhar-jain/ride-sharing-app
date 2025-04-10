@@ -1,0 +1,6 @@
+{
+  "routes": {
+    "/ride-sharing-app": {},
+    "/ride-sharing-app/dashboard": {}
+  }
+}

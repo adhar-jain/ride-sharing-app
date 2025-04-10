@@ -1,11 +1,11 @@
 name: RS app deployment 
 
 on: 
-  push:
-    branches:
-      - main
-  workflow_dispatch:
-
+   workflow_run:
+    workflows: ["CI Workflow"]  # Must match `name:` in ci.yml
+    types:
+      - completed
+    
 permissions:
   contents: read 
   pages: write
@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
     name: Deploy ride sharing app to gh pages
     runs-on: ubuntu-latest
       #Upload artifacts (optional, for later CD step)
@@ -53,7 +53,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dist
-          path: dist
+          path: ./ui/dist/ride-sharing-app
 
       # Copy all files from dist to the root of the repository
       - name: Copy files from dist to root

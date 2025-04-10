@@ -29,6 +29,13 @@ jobs:
          ref: gh-pages
          persist-credentials: true      
 
+      # Check and create gh-pages branch
+      - name: Check and create gh-pages branch
+        run: |
+          if ! git show-ref --quiet refs/heads/gh-pages; then
+            git branch gh-pages
+          fi
+
       # Setup Git credentials
       - name: Setup Git credentials with PAT
         run: |

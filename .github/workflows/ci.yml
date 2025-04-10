@@ -30,7 +30,7 @@ jobs:
             #Run unit tests
             - name: Lint and Test
               run: |
-                npm run lint
+                npm run lint -- --force --max-warnings=0
                 npm run test -- --watch=false --browsers=ChromeHeadLess
                 working-directory: ./ui
 

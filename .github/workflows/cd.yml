@@ -34,6 +34,10 @@ jobs:
         with:
           node-version: 18
 
+      # Install Angular CLI
+      - name: Install Angular CLI
+        run: npm install -g @angular/cli
+
       # Install dependencies and build the project
       - name: Install dependencies and build
         run: |

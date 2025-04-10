@@ -1,0 +1,50 @@
+name: CI Workflow
+
+on: 
+    push:
+        branches: [main]
+    pull_request:
+
+jobs:
+    angular-app:
+        name: Build & Test Angular App
+        runs-on: ubuntu-latest
+
+        steps:
+            #Checkout code
+            - name: check out code
+              uses: actions/checkout@v4
+              
+            #setup node.js
+            - name: setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: 18
+
+            #Install dependencies
+            - name: Install Dependencies
+              run: mkdir ui
+            - run: npm ci
+
+            #Run unit tests
+            - name: Lint and Test
+              run: |
+                npm install --save-dev karma-chrome-launcher
+                npm run lint -- --force --max-warnings=0
+                npm run test -- --watch=false --browsers=ChromeHeadless
+
+            #Build artifact
+            - name: Build artifacts
+              run: npm run build
+
+            #Security scans (Veracode, Black Duck)
+            
+
+            #Upload artifacts (optional, for later CD step)
+            # Upload the dist directory as an artifact
+
+            - name: Upload Angular build
+              uses: actions/upload-artifact@v4
+              with:
+                name: dist
+                path: dist/ride-sharing-app

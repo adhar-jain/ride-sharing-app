@@ -8,7 +8,7 @@ on:
    workflow_dispatch: # Allows manual triggering of the workflow
 
 permissions:
-  contents: read 
+  contents: write 
   pages: write
   id-token: write
 
@@ -22,69 +22,34 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps: 
-      # Initialize Git repository
-      - name: Initialize Git repository
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      # Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # Install dependencies and build the project
+      - name: Install dependencies and build
         run: |
-          git init
-          git remote add origin https://github.com/${{ github.repository }}
-          git fetch origin main
-          git checkout main
-          
-      # Setup Git credentials
-      - name: Setup Git credentials with PAT
+          npm install
+          npm run build
+
+      # Deploy to gh-pages branch
+      - name: Deploy to gh-pages
         run: |
           git config --global user.email "adharjain@gmail.com"
           git config --global user.name "adhar-jain"
-          git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
-
-      # Check and create gh-pages branch
-      - name: Check and create gh-pages branch
-        run: |
-          if ! git show-ref --quiet refs/heads/gh-pages; then
-            git checkout -b gh-pages
-            git push origin gh-pages
-          fi
-
-      # Checkout the gh-pages branch
-      - name: Checkout gh-pages branch
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-          persist-credentials: true          
-
-      # Debug gh-pages branch - Before copying files
-      - name: Debug gh-pages branch - Before
-        run: |
-          ls -la  
-          echo '--------'
-          ls -R
-
-      # Download the artifact uploaded during the build job
-      - name: Download dist artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist/ride-sharing-app
-
-      - name: Debug gh-pages branch - Middle
-        run: |
-          ls -la  
-          echo '--------'
-          ls -R
-      
-      - name: Copy files from dist to root
-        run: cp -r dist/browser/* .
-
-      - name: Debug gh-pages branch - After
-        run: ls -R
-
-      # Append a timestamp to index.html to force a change
-      - name: Append timestamp to index.html
-        run: echo "<!-- Deployed at $(date) -->" >> ./index.html
-
-      # Commit and push changes to the gh-pages branch
-      - name: Commit and push to gh-pages branch
-        run: |
+          git init
+          git remote add origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
+          git checkout --orphan gh-pages
+          rm -rf .gitignore
+          cp -r dist/ride-sharing-app/* .
           git add -A
-          git commit -m "Deploy to GitHub Pages - $(date)" || echo "No changes to commit"
-          git push origin gh-pages --force
+          git commit -m "Deploy to GitHub Pages - $(date)"
+          git push -f origin gh-pages

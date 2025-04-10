@@ -75,7 +75,6 @@ jobs:
       - name: Copy files from dist to root
         run:  | 
               cp dist/browser/index.html ./index.html
-              cp -r dist/. .
 
       - name: Debug gh-pages branch - After
         run: ls -R

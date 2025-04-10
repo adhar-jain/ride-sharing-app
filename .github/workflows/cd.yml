@@ -22,12 +22,12 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps: 
-       # Checkout the gh-pages branch
+      # Checkout the gh-pages branch
       - name: Checkout gh-pages branch
         uses: actions/checkout@v4
         with:
-         ref: gh-pages
-         persist-credentials: true      
+          ref: gh-pages
+          persist-credentials: true      
 
       # Setup Git credentials
       - name: Setup Git credentials with PAT
@@ -41,15 +41,6 @@ jobs:
         run: |
           git rm -rf . || true
           git clean -fdx
-          git reset --hard HEAD
-          git checkout gh-pages
-
-        # Debug gh-pages branch - After copying files
-      - name: Debug gh-pages branch - Before
-        run: |
-          ls -la  
-          echo '--------'
-          ls -R
 
       # Download the artifact uploaded during the build job
       - name: Download dist artifact
@@ -58,27 +49,17 @@ jobs:
           name: dist
           path: dist
 
-      - name: Debug gh-pages branch - Middle
-        run: |
-          ls -la  
-          echo '--------'
-          ls -R
-  
+      # Debug dist directory
+      - name: Debug dist directory
+        run: ls -R dist
+
       # Copy all files from dist to the root of the repository
       - name: Copy files from dist to root
-        run:  | 
-              cp dist/browser/index.html ./index.html
-
-      - name: Debug gh-pages branch - After
-        run: ls -R
+        run: cp -r dist/browser/. .
 
       # Append a timestamp to index.html to force a change
       - name: Append timestamp to index.html
         run: echo "<!-- Deployed at $(date) -->" >> ./index.html
-
-      # # Debug gh-pages branch - After copying files
-      # - name: Debug gh-pages branch
-      #   run: ls -R
 
       # Commit and push changes to the gh-pages branch
       - name: Commit and push to gh-pages branch

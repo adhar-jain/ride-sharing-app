@@ -37,9 +37,10 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
 
       # Clean the gh-pages branch
-      - name: Clean gh-pages branch
+      - name: Clean the gh-pages branch
         run: |
-          git reset --hard HEAD
+          git rm -rf . || true
+          git clean -fdx
 
         # Debug gh-pages branch - After copying files
       - name: Debug gh-pages branch - Before
@@ -60,11 +61,14 @@ jobs:
           ls -la  
           echo '--------'
           ls -R
-  
-      # Copy all files from dist to the root of the repository
+      
       - name: Copy files from dist to root
-        run:  | 
-              cp dist/ride-sharing-app/browser/index.html ./index.html
+        run: cp -r dist/browser/* .
+
+      # Copy all files from dist to the root of the repository
+      #- name: Copy files from dist to root
+      #  run:  | 
+      #        cp dist/ride-sharing-app/browser/index.html ./index.html
 
       - name: Debug gh-pages branch - After
         run: ls -R

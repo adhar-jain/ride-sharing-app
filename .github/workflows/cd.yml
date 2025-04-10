@@ -5,7 +5,8 @@ on:
     workflows: ["CI Workflow"]  # Must match `name:` in ci.yml
     types:
       - completed
-    
+   workflow_dispatch: # Allows manual triggering of the workflow
+
 permissions:
   contents: read 
   pages: write

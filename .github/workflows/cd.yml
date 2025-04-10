@@ -65,9 +65,17 @@ jobs:
           name: dist
           path: dist
 
+      - name: Debug gh-pages branch - Middle
+        run: |
+          ls -la  
+          echo '--------'
+          ls -R
+  
       # Copy all files from dist to the root of the repository
       - name: Copy files from dist to root
-        run: cp -r dist/. .
+        run:  | 
+              cp dist/browser/index.html ./index.html
+              cp -r dist/. .
 
       - name: Debug gh-pages branch - After
         run: ls -R

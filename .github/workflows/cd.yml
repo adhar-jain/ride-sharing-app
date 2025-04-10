@@ -53,7 +53,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dist
-          path: ./ui/dist/ride-sharing-app
+          path: dist
 
       # Copy all files from dist to the root of the repository
       - name: Copy files from dist to root

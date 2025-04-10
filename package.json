@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test --watch=false --browsers=ChromeHeadless",
     "serve:ssr:ride-sharing-app": "node dist/ride-sharing-app/server/server.mjs",
-    "lint": "ng lint --fix"
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {

@@ -1,48 +1,50 @@
 name: CI Workflow
 
 on: 
-  push:
-    branches: [main]
-  pull_request:
+    push:
+        branches: [main]
+    pull_request:
 
 jobs:
-  angular-app:
-    name: Build & Test Angular App
-    runs-on: ubuntu-latest
+    angular-app:
+        name: Build & Test Angular App
+        runs-on: ubuntu-latest
 
-    steps:
-      # Checkout code
-      - name: Check out code
-        uses: actions/checkout@v4
+        steps:
+            #Checkout code
+            - name: check out code
+              uses: actions/checkout@v4
+              
+            #setup node.js
+            - name: setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: 18
 
-      # Setup Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
+            #Install dependencies
+            - name: Install Dependencies
+              run: mkdir ui
+            - run: npm ci
 
-      # Install dependencies
-      - name: Install Dependencies
-        run: npm ci
+            #Run unit tests
+            - name: Lint and Test
+              run: |
+                npm install --save-dev karma-chrome-launcher
+                npm run lint -- --force --max-warnings=0
+                npm run test -- --watch=false --browsers=ChromeHeadless
 
-      # Run unit tests
-      - name: Lint and Test
-        run: |
-          npm install --save-dev karma-chrome-launcher
-          npm run lint -- --force --max-warnings=0
-          npm run test -- --watch=false --browsers=ChromeHeadless
+            #Build artifact
+            - name: Build artifacts
+              run: npm run build
 
-      # Build artifact
-      - name: Build Angular App
-        run: npm run build
+            #Security scans (Veracode, Black Duck)
+            
 
-      # Debug dist directory
-      - name: Debug dist directory
-        run: ls -R dist
+            #Upload artifacts (optional, for later CD step)
+            # Upload the dist directory as an artifact
 
-      # Upload build artifact
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist
+            - name: Upload Angular build
+              uses: actions/upload-artifact@v4
+              with:
+                name: dist
+                path: dist

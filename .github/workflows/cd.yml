@@ -22,13 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps: 
-      # Checkout the gh-pages branch
-      - name: Checkout gh-pages branch
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-          persist-credentials: true      
-
+      
       # Setup Git credentials
       - name: Setup Git credentials with PAT
         run: |
@@ -36,30 +30,57 @@ jobs:
           git config --global user.name "adhar-jain"
           git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
 
+      # Checkout the gh-pages branch
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+         ref: gh-pages
+         persist-credentials: true      
+
+      
       # Clean the gh-pages branch
       - name: Clean gh-pages branch
         run: |
-          git rm -rf . || true
-          git clean -fdx
+          #git rm -rf . || true
+          #git clean -fdx
+          git reset --hard HEAD
+          #git checkout gh-pages
 
-      # Download the artifact uploaded during the CI workflow
+        # Debug gh-pages branch - After copying files
+      - name: Debug gh-pages branch - Before
+        run: |
+          ls -la  
+          echo '--------'
+          ls -R
+
+      # Download the artifact uploaded during the build job
       - name: Download dist artifact
         uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
 
-      # Debug dist directory
-      - name: Debug dist directory
-        run: ls -R dist
-
+      - name: Debug gh-pages branch - Middle
+        run: |
+          ls -la  
+          echo '--------'
+          ls -R
+  
       # Copy all files from dist to the root of the repository
       - name: Copy files from dist to root
-        run: cp -r dist/browser/. .
+        run:  | 
+              cp dist/ride-sharing-app/browser/index.html ./index.html
+
+      - name: Debug gh-pages branch - After
+        run: ls -R
 
       # Append a timestamp to index.html to force a change
       - name: Append timestamp to index.html
         run: echo "<!-- Deployed at $(date) -->" >> ./index.html
+
+      # # Debug gh-pages branch - After copying files
+      # - name: Debug gh-pages branch
+      #   run: ls -R
 
       # Commit and push changes to the gh-pages branch
       - name: Commit and push to gh-pages branch

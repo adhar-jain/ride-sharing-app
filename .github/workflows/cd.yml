@@ -38,7 +38,7 @@ jobs:
       - name: Install dependencies and build
         run: |
           npm install
-          npm run build
+          ng build --configuration production --base-href /ride-sharing-app/
 
       # Deploy to gh-pages branch
       - name: Deploy to gh-pages

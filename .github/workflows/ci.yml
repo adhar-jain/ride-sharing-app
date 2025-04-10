@@ -23,10 +23,9 @@ jobs:
 
             #Install dependencies
             - name: Install Dependencies
-              run: |
-                mkdir ui
-                npm ci
-                working-directory: ui
+              run: mkdir ui
+            - run: npm ci
+              working-directory: ./ui
 
             #Run unit tests
             - name: Lint and Test

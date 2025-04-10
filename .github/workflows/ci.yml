@@ -31,7 +31,6 @@ jobs:
             - name: Lint and Test
               run: |
                 npm install --save-dev karma-chrome-launcher
-                ng lint --fix
                 npm run lint -- --force --max-warnings=0
                 npm run test -- --watch=false --browsers=ChromeHeadless
               working-directory: ./ui

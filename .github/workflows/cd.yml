@@ -30,8 +30,8 @@ jobs:
       #1. Checkout Repository
        # Checkout the gh-pages branch
       - name: Checkout gh-pages branch
-       uses: actions/checkout@v4
-       with:
+        uses: actions/checkout@v4
+        with:
          ref: gh-pages
          persist-credentials: true      
 

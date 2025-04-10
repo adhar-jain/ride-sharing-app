@@ -1,2 +1,0 @@
-- name: Add .nojekyll
-  run: echo > .nojekyll

@@ -27,6 +27,12 @@ jobs:
         run: |
           git init
           git remote add origin https://github.com/${{ github.repository }}
+          # Create an initial commit if the repository is empty
+          if [ -z "$(git rev-parse --is-inside-work-tree 2>/dev/null)" ]; then
+            echo "# Initial commit" > README.md
+            git add README.md
+            git commit -m "Initial commit"
+          fi
 
       # Check and create gh-pages branch
       - name: Check and create gh-pages branch

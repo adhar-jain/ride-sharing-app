@@ -39,10 +39,7 @@ jobs:
       # Clean the gh-pages branch
       - name: Clean gh-pages branch
         run: |
-          #git rm -rf . || true
-          git clean -fdx
           git reset --hard HEAD
-          #git checkout gh-pages
 
         # Debug gh-pages branch - After copying files
       - name: Debug gh-pages branch - Before
@@ -56,7 +53,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dist
-          path: ./dist
+          path: dist
 
       - name: Debug gh-pages branch - Middle
         run: |
@@ -67,7 +64,7 @@ jobs:
       # Copy all files from dist to the root of the repository
       - name: Copy files from dist to root
         run:  | 
-              cp dist/browser/index.html ./index.html
+              cp dist/ride-sharing-app/browser/index.html ./index.html
 
       - name: Debug gh-pages branch - After
         run: ls -R

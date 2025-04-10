@@ -22,19 +22,19 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps: 
-       # Checkout the gh-pages branch
-      - name: Checkout gh-pages branch
-        uses: actions/checkout@v4
-        with:
-         ref: gh-pages
-         persist-credentials: true      
-
       # Check and create gh-pages branch
       - name: Check and create gh-pages branch
         run: |
           if ! git show-ref --quiet refs/heads/gh-pages; then
             git branch gh-pages
           fi
+
+       # Checkout the gh-pages branch
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+         ref: gh-pages
+         persist-credentials: true          
 
       # Setup Git credentials
       - name: Setup Git credentials with PAT

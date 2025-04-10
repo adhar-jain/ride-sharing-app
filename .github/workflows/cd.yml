@@ -1,4 +1,4 @@
-name: build-test-deploy
+name: RS app deployment 
 
 on: 
   push:
@@ -17,63 +17,23 @@ concurrency:
 
 jobs:
   build:
-    name: Build ride sharing app
+    name: Deploy ride sharing app to gh pages
     runs-on: ubuntu-latest
+      #Upload artifacts (optional, for later CD step)
+      #CD Workflow (Trigger on tag or merge to main/release):
+      
+      #2. Download/prepare build artifact
+      #3. Deploy to PCF
+      #4. Smoke tests or basic health checks
+    
     steps: 
-      # Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      # Set up Node.js environment
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20.x'
-
-      # Install dependencies
-      - name: Install dependencies
-        run: |
-          npm install
-          npm cache clean --force
-
-      # Build the Angular project
-      - name: Build Angular project
-        run: npm run build -- --output-path=dist/ride-sharing-app --base-href=/ride-sharing-app/
-
-      # Add .nojekyll file
-      - name: Add .nojekyll
-        run: echo > dist/ride-sharing-app/.nojekyll
-
-      # Copy index.html to 404.html
-      - name: Copy index.html to 404.html
-        run: cp dist/ride-sharing-app/index.html dist/ride-sharing-app/404.html
-
-      # Debug the contents of the dist directory
-      - name: Debug dist directory
-        run: ls -R dist
-
-      # Upload the dist directory as an artifact
-      - name: Upload dist artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist/ride-sharing-app
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    
-    permissions: write-all
-    
-    steps:
-      # Checkout the gh-pages branch
+      #1. Checkout Repository
+       # Checkout the gh-pages branch
       - name: Checkout gh-pages branch
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-          persist-credentials: true
+       uses: actions/checkout@v4
+       with:
+         ref: gh-pages
+         persist-credentials: true      
 
       # Setup Git credentials
       - name: Setup Git credentials with PAT

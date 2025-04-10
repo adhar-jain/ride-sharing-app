@@ -1,0 +1,45 @@
+name: Continous Integration for ride sharing app
+
+on: 
+    push:
+        branches: [main]
+    pull_request:
+
+jobs:
+    angular-app:
+        name: Build & Test Angular App
+        runs-on: ubuntu-latest
+
+        steps:
+            #Checkout code
+            - name: check out code
+              uses: actions/checkout@v4
+              
+            #setup node.js
+            - name: setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: 18
+
+            #Install dependencies
+            - name: Install Dependencies
+              run: npm ci
+              working-directory: ./ui
+
+            #Run unit tests
+            - name: Lint and Test
+              run: |
+                npm run lint
+                npm run test -- --watch=false --browsers=ChromeHeadLess
+                working-directory: ./ui
+
+            #Build artifact
+            - name: Build artifacts
+              run: npm run build
+              working-directory: ./ui
+
+            #Security scans (Veracode, Black Duck)
+            
+
+            #Upload artifacts (optional, for later CD step)
+            

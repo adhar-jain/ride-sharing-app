@@ -26,7 +26,7 @@ jobs:
               run: |
                 mkdir ui
                 npm ci
-                working-directory: ./ui
+                working-directory: ui
 
             #Run unit tests
             - name: Lint and Test

@@ -27,28 +27,23 @@ jobs:
         run: |
           git init
           git remote add origin https://github.com/${{ github.repository }}
-          # Ensure the repository has an initial commit
-          if [ -z "$(git rev-parse HEAD 2>/dev/null)" ]; then
-            echo "# Initial commit" > README.md
-            git add README.md
-            git commit -m "Initial commit"
-            git branch -M main
-            git push origin main
-          fi
+          git fetch origin main
+          git checkout main
 
       # Check and create gh-pages branch
       - name: Check and create gh-pages branch
         run: |
           if ! git show-ref --quiet refs/heads/gh-pages; then
-            git branch gh-pages
+            git checkout -b gh-pages
+            git push origin gh-pages
           fi
 
-       # Checkout the gh-pages branch
+      # Checkout the gh-pages branch
       - name: Checkout gh-pages branch
         uses: actions/checkout@v4
         with:
-         ref: gh-pages
-         persist-credentials: true          
+          ref: gh-pages
+          persist-credentials: true          
 
       # Setup Git credentials
       - name: Setup Git credentials with PAT
@@ -57,13 +52,7 @@ jobs:
           git config --global user.name "adhar-jain"
           git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
 
-      # # Clean the gh-pages branch
-      # - name: Clean the gh-pages branch
-      #   run: |
-      #     git rm -rf . || true
-      #     git clean -fdx
-
-        # Debug gh-pages branch - After copying files
+      # Debug gh-pages branch - Before copying files
       - name: Debug gh-pages branch - Before
         run: |
           ls -la  
@@ -86,21 +75,12 @@ jobs:
       - name: Copy files from dist to root
         run: cp -r dist/browser/* .
 
-      # Copy all files from dist to the root of the repository
-      #- name: Copy files from dist to root
-      #  run:  | 
-      #        cp dist/ride-sharing-app/browser/index.html ./index.html
-
       - name: Debug gh-pages branch - After
         run: ls -R
 
       # Append a timestamp to index.html to force a change
       - name: Append timestamp to index.html
         run: echo "<!-- Deployed at $(date) -->" >> ./index.html
-
-      # # Debug gh-pages branch - After copying files
-      # - name: Debug gh-pages branch
-      #   run: ls -R
 
       # Commit and push changes to the gh-pages branch
       - name: Commit and push to gh-pages branch

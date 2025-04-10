@@ -22,6 +22,12 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps: 
+      # Initialize Git repository
+      - name: Initialize Git repository
+        run: |
+          git init
+          git remote add origin https://github.com/${{ github.repository }}
+
       # Check and create gh-pages branch
       - name: Check and create gh-pages branch
         run: |

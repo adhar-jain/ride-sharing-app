@@ -22,7 +22,13 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps: 
-      
+       # Checkout the gh-pages branch
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+         ref: gh-pages
+         persist-credentials: true      
+
       # Setup Git credentials
       - name: Setup Git credentials with PAT
         run: |
@@ -30,19 +36,11 @@ jobs:
           git config --global user.name "adhar-jain"
           git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
 
-      # Checkout the gh-pages branch
-      - name: Checkout gh-pages branch
-        uses: actions/checkout@v4
-        with:
-         ref: gh-pages
-         persist-credentials: true      
-
-      
       # Clean the gh-pages branch
       - name: Clean gh-pages branch
         run: |
           #git rm -rf . || true
-          #git clean -fdx
+          git clean -fdx
           git reset --hard HEAD
           #git checkout gh-pages
 
@@ -69,7 +67,7 @@ jobs:
       # Copy all files from dist to the root of the repository
       - name: Copy files from dist to root
         run:  | 
-              cp dist/ride-sharing-app/browser/index.html ./index.html
+              cp dist/browser/index.html ./index.html
 
       - name: Debug gh-pages branch - After
         run: ls -R

@@ -57,8 +57,8 @@ jobs:
           fi
           # Clean the gh-pages branch
           git rm -rf .
-          # Copy only the built files to the root of the gh-pages branch
-          cp -r dist/ride-sharing-app/* .
+          # Copy only the contents of the browser directory to the root of the gh-pages branch
+          cp -r dist/ride-sharing-app/browser/* .
           # Add and commit changes
           git add -A
           git commit -m "Deploy to GitHub Pages - $(date)"
